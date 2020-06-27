@@ -34,9 +34,10 @@
 </template>
 <script>
 export default {
+  name: 'Color',
   props: {
     value: {
-      type: Number,
+      type: [Number, String],
       default: 255
     },
     width: {
@@ -62,7 +63,6 @@ export default {
     }
   },
   methods: {
-    name: 'Color',
     color() {
       if (typeof this.value === 'string') {
         this.colorHex = this.value

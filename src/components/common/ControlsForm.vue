@@ -9,8 +9,8 @@
       <template v-if="item.type === 'radio'">
         <i
           v-for="option in item.option"
-          class="icon.text"
-          :key="option"
+          class="icon"
+          :key="option.value"
           :class="'icon-'+option.icon+(item.value === option.value?' hover':'')"
           :uk-tooltip="option.text"
           @click="optionInput(key, option.value)"
@@ -94,58 +94,15 @@ export default {
     loading
   },
   props: ['form'],
-  data() {
-    return {
-      lines: [],
-      width: 0,
-      r: 0,
-      colors: {
-        dark: '#7a7a7a',
-        blank: '#fff'
-      }
-    }
-  },
-  mounted() {
-    this.getList(this.size)
-  },
   methods: {
-    topx(num) {
-      return `${num / 2}px`
+    optionInput(key, value) {
+      this.$emit('input', { key, value })
     },
-    getTriangleWidth(hypotenuse, angle = 0) {
-      return {
-        opposite: hypotenuse * Math.cos((angle * 2 * Math.PI) / 360), // 对边
-        frontier: hypotenuse * Math.sin((angle * 2 * Math.PI) / 360) //  临边
-      }
+    btnClick(key) {
+      this.$emit('btn-click', { key })
     },
-    getList(size) {
-      const halfSize = size / 2 // 正方形的一半长
-      const r = size / 6 // 空心圆的半径
-      const l = (size - r * 2) / 2 // 线的长度
-      const halfL = l / 2 // 线一半的长度
-      const centerR = halfL + r // 定位中心点的圆的半径
-      let lines = []
-      for (let i = 0; i < 8; i++) {
-        const { opposite: left, frontier: top } = this.getTriangleWidth(
-          centerR,
-          i * 45
-        )
-        lines.push({
-          left: halfSize + left,
-          top: halfSize + top
-        })
-      }
-      this.width = size
-      this.r = halfL
-      this.lines = lines
-    },
-    event: function(data, e) {
-      if (typeof e.event === 'undefined') {
-        e.event = { type: data.type, index: [] }
-        e.stopPropagation()
-      }
-      e.event.index.unshift(data.index)
-      this.$emit('comp-event', e)
+    inputShowInput(key, e) {
+      this.$emit('input', { key, value: e.target.value })
     }
   }
 }
